@@ -1,3 +1,4 @@
+include 'swapi-consumer'
 include 'swapi-provider'
 
 rootProject.name = 'cdc-with-pact'

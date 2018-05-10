@@ -1,0 +1,27 @@
+plugins {
+  id "au.com.dius.pact" version "3.5.16"
+}
+
+apply plugin: 'application'
+apply plugin: 'groovy'
+
+group = 'org.softwerkskammer.cdc.swapp'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+mainClassName = 'org.softwerkskammer.cdc.swapp.Main'
+
+dependencies {
+  compile 'com.mashape.unirest:unirest-java:1.4.9'
+
+  testCompile 'au.com.dius:pact-jvm-consumer-groovy_2.12:3.5.16'
+  testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
+    exclude group: 'org.codehaus.groovy'
+  }
+  testCompile 'cglib:cglib-nodep:3.2.6',
+    'org.objenesis:objenesis:2.6'
+}
+
+test {
+  systemProperties['pact.rootDir'] = "$buildDir/pacts"
+}
