@@ -1,11 +1,15 @@
 package org.softwerkskammer.cdc.swapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class SWPerson {
 
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,8 +17,9 @@ public class SWPerson {
     private long characterId;
     private String name;
     private String gender;
+    @JsonIgnore
     @ManyToMany(mappedBy = "characters")
-    private List<SWFilm> films;
+    private List<SWFilm> films = new ArrayList<>();
 
     public SWPerson() {
         // used by JPA
