@@ -24,6 +24,6 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 
 	runtime('com.h2database:h2')
-
+	runtime('javax.xml.bind:jaxb-api:2.3.0')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
