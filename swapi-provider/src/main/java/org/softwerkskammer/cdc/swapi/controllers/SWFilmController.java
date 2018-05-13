@@ -29,10 +29,11 @@ public class SWFilmController {
     }
 
     @GetMapping
-    public List<SWFilm> films(final UriComponentsBuilder uriComponentsBuilder) {
-        return filmRepository.findAll(Sort.by("episodeId")).stream()
+    public SWCollection<SWFilm> allFilms(final UriComponentsBuilder uriComponentsBuilder) {
+        final List<SWFilm> allFilms = filmRepository.findAll(Sort.by("episodeId")).stream()
                 .map(toSWFilm(uriComponentsBuilder))
                 .collect(toList());
+        return new SWCollection<>(allFilms);
     }
 
     @GetMapping("/{episodeId}")

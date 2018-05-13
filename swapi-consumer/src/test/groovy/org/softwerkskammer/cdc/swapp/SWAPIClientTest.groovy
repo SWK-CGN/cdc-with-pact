@@ -6,7 +6,6 @@ import org.softwerkskammer.cdc.swapp.model.SWPerson
 import spock.lang.Specification
 
 import static au.com.dius.pact.consumer.PactVerificationResult.Ok
-import static groovy.json.JsonOutput.toJson
 import static java.util.Collections.emptyList
 
 class SWAPIClientTest extends Specification {
@@ -66,7 +65,7 @@ class SWAPIClientTest extends Specification {
                     "[" +
                             "{\"id\": 1, \"name\": \"Luke Skywalker\", \"gender\": \"male\"}," +
                             "{\"id\": 2, \"name\": \"C-3PO\", \"gender\": \"n/a\"}" +
-                    "]"
+                            "]"
             )
         }
         List<SWPerson> people = emptyList()

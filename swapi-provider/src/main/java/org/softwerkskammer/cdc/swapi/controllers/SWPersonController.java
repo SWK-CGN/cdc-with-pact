@@ -29,10 +29,11 @@ public class SWPersonController {
     }
 
     @GetMapping
-    public List<SWPerson> people(final UriComponentsBuilder uriComponentsBuilder) {
-        return personRepository.findAll(Sort.by("characterId")).stream()
+    public SWCollection<SWPerson> allPeople(final UriComponentsBuilder uriComponentsBuilder) {
+        final List<SWPerson> allPeople = personRepository.findAll(Sort.by("characterId")).stream()
                 .map(toSWPerson(uriComponentsBuilder))
                 .collect(toList());
+        return new SWCollection<>(allPeople);
     }
 
     @GetMapping("/{characterId}")

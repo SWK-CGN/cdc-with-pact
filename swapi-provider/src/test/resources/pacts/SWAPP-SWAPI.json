@@ -16,14 +16,14 @@
                 "status": 200,
                 "body": [
                     {
-                        "gender": "male",
                         "id": 1,
-                        "name": "Luke Skywalker"
+                        "name": "Luke Skywalker",
+                        "gender": "male"
                     },
                     {
-                        "gender": "n/a",
                         "id": 2,
-                        "name": "C-3PO"
+                        "name": "C-3PO",
+                        "gender": "n/a"
                     }
                 ]
             },
@@ -42,9 +42,9 @@
             "response": {
                 "status": 200,
                 "body": {
-                    "gender": "male",
                     "id": 1,
-                    "name": "Luke Skywalker"
+                    "name": "Luke Skywalker",
+                    "gender": "male"
                 }
             },
             "providerStates": [
