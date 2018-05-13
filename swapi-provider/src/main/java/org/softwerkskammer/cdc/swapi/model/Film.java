@@ -1,6 +1,7 @@
 package org.softwerkskammer.cdc.swapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -9,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class SWFilm {
+public class Film {
 
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @JsonProperty("id")
@@ -21,13 +22,14 @@ public class SWFilm {
     private String title;
     private LocalDate releaseDate;
     @ManyToMany(cascade = CascadeType.ALL)
-    private List<SWPerson> characters = new ArrayList<>();
+    @JsonManagedReference
+    private List<Person> characters = new ArrayList<>();
 
-    public SWFilm() {
+    public Film() {
         // used by JPA
     }
 
-    public SWFilm(final long episodeId, final String title, final LocalDate releaseDate) {
+    public Film(final long episodeId, final String title, final LocalDate releaseDate) {
         this.episodeId = episodeId;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -49,11 +51,11 @@ public class SWFilm {
         return releaseDate;
     }
 
-    public List<SWPerson> getCharacters() {
+    public List<Person> getCharacters() {
         return characters;
     }
 
-    public void setCharacters(final List<SWPerson> characters) {
+    public void setCharacters(final List<Person> characters) {
         this.characters = characters;
     }
 
