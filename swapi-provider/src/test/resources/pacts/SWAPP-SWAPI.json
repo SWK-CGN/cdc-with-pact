@@ -20,14 +20,19 @@
                 "body": {
                     "items": [
                         {
+                            "gender": "male",
                             "id": 1,
-                            "name": "Luke Skywalker",
-                            "gender": "male"
+                            "name": "Luke Skywalker"
                         },
                         {
+                            "gender": "male",
                             "id": 1,
-                            "name": "Luke Skywalker",
-                            "gender": "male"
+                            "name": "Luke Skywalker"
+                        },
+                        {
+                            "gender": "male",
+                            "id": 1,
+                            "name": "Luke Skywalker"
                         }
                     ]
                 },
@@ -36,7 +41,8 @@
                         "$.items": {
                             "matchers": [
                                 {
-                                    "match": "type"
+                                    "match": "type",
+                                    "min": 1
                                 }
                             ],
                             "combine": "AND"
@@ -88,12 +94,21 @@
                     "Content-Type": "application/json"
                 },
                 "body": {
+                    "gender": "male",
                     "id": 1,
-                    "name": "Luke Skywalker",
-                    "gender": "male"
+                    "name": "Luke Skywalker"
                 },
                 "matchingRules": {
                     "body": {
+                        "$.gender": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "male|female|n/a|hermaphrodite"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
                         "$.id": {
                             "matchers": [
                                 {
@@ -107,15 +122,6 @@
                                 {
                                     "match": "regex",
                                     "regex": ".+"
-                                }
-                            ],
-                            "combine": "AND"
-                        },
-                        "$.gender": {
-                            "matchers": [
-                                {
-                                    "match": "regex",
-                                    "regex": "male|female|n/a|hermaphrodite"
                                 }
                             ],
                             "combine": "AND"

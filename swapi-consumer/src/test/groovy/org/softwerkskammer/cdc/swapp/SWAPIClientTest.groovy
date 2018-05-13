@@ -84,7 +84,7 @@ class SWAPIClientTest extends Specification {
             withAttributes(path: '/people')
             willRespondWith(status: 200)
             withBody(mimeType: JSON.toString()) {
-                items eachLike(2 , {
+                items minLike(1,3 , {
                     id integer(1)
                     name regexp(~/.+/, 'Luke Skywalker')
                     gender regexp(~/male|female|n\/a|hermaphrodite/, 'male')
@@ -100,7 +100,7 @@ class SWAPIClientTest extends Specification {
 
         then:
         pactResult == Ok.INSTANCE
-        people.size() == 2
+        people.size() == 3
     }
 
 }
