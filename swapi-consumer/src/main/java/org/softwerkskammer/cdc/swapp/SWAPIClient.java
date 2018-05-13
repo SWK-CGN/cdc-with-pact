@@ -10,7 +10,6 @@ import com.mashape.unirest.request.HttpRequest;
 import org.apache.http.HttpStatus;
 import org.softwerkskammer.cdc.swapp.model.SWFilm;
 import org.softwerkskammer.cdc.swapp.model.SWPerson;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -36,10 +35,10 @@ public class SWAPIClient {
         } catch (UnirestException e) {
             e.printStackTrace();
         }
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public Optional<SWPerson> getPerson(final String personID) {
+    public Optional<SWPerson> getPerson(final long personID) {
         try {
             HttpResponse<SWPerson> getPersonResponse = getRequestFor("/people/" + personID)
                     .asObject(SWPerson.class);
@@ -58,10 +57,10 @@ public class SWAPIClient {
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public Optional<SWFilm> getFilm(final String filmID) {
+    public Optional<SWFilm> getFilm(final long filmID) {
         try {
             HttpResponse<SWFilm> getFilmResponse = getRequestFor("/films/" + filmID)
                     .asObject(SWFilm.class);

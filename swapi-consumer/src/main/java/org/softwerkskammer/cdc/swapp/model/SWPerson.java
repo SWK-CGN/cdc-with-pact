@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SWPerson {
 
-    private String id;
+    private long id;
     private String name;
     private String gender;
 
-    public SWPerson(String id, String name, String gender) {
+    public SWPerson(long id, String name, String gender) {
         this.id = id;
         this.name = name;
         this.gender = gender;
@@ -17,7 +17,7 @@ public class SWPerson {
 
     public SWPerson(){}
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 

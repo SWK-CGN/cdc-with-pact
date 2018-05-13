@@ -7,22 +7,22 @@
     },
     "interactions": [
         {
-            "description": "a request for person with id 'xyz'",
+            "description": "a request for person with ID 1'",
             "request": {
                 "method": "GET",
-                "path": "/people/xyz"
+                "path": "/people/1"
             },
             "response": {
                 "status": 200,
                 "body": {
-                    "gender": "Male",
-                    "id": "xyz",
-                    "name": "Han Solo"
+                    "gender": "male",
+                    "id": 1,
+                    "name": "Luke Skywalker"
                 }
             },
             "providerStates": [
                 {
-                    "name": "a person with id 'xyz' does exist"
+                    "name": "Luke Skywalker with ID 1 exists"
                 }
             ]
         }
