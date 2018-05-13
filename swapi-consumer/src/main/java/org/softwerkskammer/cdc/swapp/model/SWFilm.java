@@ -1,5 +1,8 @@
 package org.softwerkskammer.cdc.swapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SWFilm {
 
     private Long id;

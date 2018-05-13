@@ -16,5 +16,5 @@ subprojects {
 
 task copyPact(type: Copy) {
     from "${project(':swapi-consumer').buildDir}/pacts"
-    into "${project(':swapi-provider').buildDir}/pacts"
+    into "${project(':swapi-provider').projectDir}/src/test/resources/pacts"
 }

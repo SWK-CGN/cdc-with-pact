@@ -1,0 +1,38 @@
+{
+    "provider": {
+        "name": "SWAPI"
+    },
+    "consumer": {
+        "name": "SWAPP"
+    },
+    "interactions": [
+        {
+            "description": "a request for person with id 'xyz'",
+            "request": {
+                "method": "GET",
+                "path": "/people/xyz"
+            },
+            "response": {
+                "status": 200,
+                "body": {
+                    "gender": "Male",
+                    "id": "xyz",
+                    "name": "Han Solo"
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "a person with id 'xyz' does exist"
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "pact-specification": {
+            "version": "3.0.0"
+        },
+        "pact-jvm": {
+            "version": "3.5.16"
+        }
+    }
+}

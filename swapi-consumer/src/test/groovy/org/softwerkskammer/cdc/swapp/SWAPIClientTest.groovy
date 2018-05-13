@@ -7,7 +7,6 @@ import spock.lang.Specification
 
 import static au.com.dius.pact.consumer.PactVerificationResult.Ok
 import static groovy.json.JsonOutput.toJson;
-
 class SWAPIClientTest extends Specification {
 
 
@@ -26,14 +25,19 @@ class SWAPIClientTest extends Specification {
         }
     }
 
-    def 'fetches star wars person which does exist'() {
+    def 'fetches a star wars character which does exist'() {
         given:
         providerMock {
             given("a person with id 'xyz' does exist")
             uponReceiving("a request for person with id 'xyz'")
             withAttributes(path: '/people/xyz')
-            willRespondWith(status: 200,
-                    body: toJson(new SWPerson("xyz", "Han Solo", "Male")))
+            willRespondWith(status: 200, body:
+            /*new PactDslJsonBody()
+                    .stringType("id", "xyz")
+                    .stringType("name", "Han Solo")
+                    .stringMatcher("gender", "Male|Female", "Male").close() */
+                    toJson(new SWPerson("xyz", "Han Solo", "Male"))
+            )
         }
         Optional<SWPerson> person = Optional.empty()
 
