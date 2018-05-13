@@ -7,6 +7,7 @@ import spock.lang.Specification
 
 import static au.com.dius.pact.consumer.PactVerificationResult.Ok
 import static groovy.json.JsonOutput.toJson
+import static java.util.Collections.emptyList
 
 class SWAPIClientTest extends Specification {
 
@@ -27,7 +28,7 @@ class SWAPIClientTest extends Specification {
     def 'fetches a star wars character which does exist'() {
         given:
         providerMock {
-            given("Luke Skywalker with ID 1 exists")
+            given("star wars data exist")
             uponReceiving("a request for person with ID 1'")
             withAttributes(path: '/people/1')
             willRespondWith(status: 200, body:
@@ -35,7 +36,8 @@ class SWAPIClientTest extends Specification {
                     .stringType("id", "xyz")
                     .stringType("name", "Han Solo")
                     .stringMatcher("gender", "Male|Female", "Male").close() */
-                    toJson(new SWPerson(1L, "Luke Skywalker", "male"))
+                    "{\"id\": 1, \"name\": \"Luke Skywalker\", \"gender\": \"male\"}"
+                    //toJson(new SWPerson(1L, "Luke Skywalker", "male", emptyList()))
             )
         }
         Optional<SWPerson> person = Optional.empty()
@@ -51,6 +53,32 @@ class SWAPIClientTest extends Specification {
         person.get().id == 1L
         person.get().name == "Luke Skywalker"
         person.get().gender == "male"
+    }
+
+
+    def 'fetches a list of star wars characters'() {
+        given:
+        providerMock {
+            given("star wars data exist")
+            uponReceiving("a request for characters'")
+            withAttributes(path: '/people')
+            willRespondWith(status: 200, body:
+                    "[" +
+                            "{\"id\": 1, \"name\": \"Luke Skywalker\", \"gender\": \"male\"}," +
+                            "{\"id\": 2, \"name\": \"C-3PO\", \"gender\": \"n/a\"}" +
+                    "]"
+            )
+        }
+        List<SWPerson> people = emptyList()
+
+        when:
+        PactVerificationResult pactResult = providerMock.runTest {
+            people = swapiClient.getPeople()
+        }
+
+        then:
+        pactResult == Ok.INSTANCE
+        people.size() == 2
     }
 
 }

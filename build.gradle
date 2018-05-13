@@ -14,7 +14,15 @@ subprojects {
     }
 }
 
-task copyPact(type: Copy) {
+
+task createPact(type: Copy) {
+    dependsOn(":swapi-consumer:build" )
     from "${project(':swapi-consumer').buildDir}/pacts"
     into "${project(':swapi-provider').projectDir}/src/test/resources/pacts"
+}
+
+project(':swapi-provider') {
+    build{
+        dependsOn createPact
+    }
 }

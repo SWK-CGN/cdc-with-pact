@@ -1,8 +1,8 @@
 package org.softwerkskammer.cdc.swapp;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -12,9 +12,12 @@ import org.softwerkskammer.cdc.swapp.model.SWFilm;
 import org.softwerkskammer.cdc.swapp.model.SWPerson;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class SWAPIClient {
@@ -31,11 +34,15 @@ public class SWAPIClient {
 
     public Collection<SWPerson> getPeople() {
         try {
-            HttpResponse<JsonNode> getPeopleRequest = getRequestFor("/people").asJson();
-        } catch (UnirestException e) {
-            e.printStackTrace();
+            HttpResponse<InputStream> getPeopleRequest = getRequestFor("/people").asBinary();
+            if (getPeopleRequest.getStatus() != HttpStatus.SC_OK) {
+                return Collections.emptyList();
+            }
+            return OBJECT_MAPPER.readValue(getPeopleRequest.getBody(), new TypeReference<List<SWPerson>>() {
+            });
+        } catch (Exception any) {
+            throw new RuntimeException(any);
         }
-        throw new UnsupportedOperationException("not yet implemented");
     }
 
     public Optional<SWPerson> getPerson(final long personID) {
@@ -53,11 +60,15 @@ public class SWAPIClient {
 
     public Collection<SWFilm> getFilms() {
         try {
-            HttpResponse<JsonNode> getFilmsRequest = getRequestFor("/films").asJson();
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
+            HttpResponse<InputStream> getFilmsRequest = getRequestFor("/films").asBinary();
+            if (getFilmsRequest.getStatus() != HttpStatus.SC_OK) {
+                return Collections.emptyList();
+            }
+            return OBJECT_MAPPER.readValue(getFilmsRequest.getBody(), new TypeReference<List<SWFilm>>() {
+            });
+        } catch (Exception any) {
+            throw new RuntimeException(any);
         }
-        throw new UnsupportedOperationException("not yet implemented");
     }
 
     public Optional<SWFilm> getFilm(final long filmID) {
@@ -77,16 +88,17 @@ public class SWAPIClient {
         return Unirest.get(swapiEndpointBaseURI + endpointPathSuffix);
     }
 
+    public final static com.fasterxml.jackson.databind.ObjectMapper OBJECT_MAPPER =
+            new com.fasterxml.jackson.databind.ObjectMapper();
+
     static {
         Unirest.setObjectMapper(
                 new ObjectMapper() {
-                    com.fasterxml.jackson.databind.ObjectMapper mapper
-                            = new com.fasterxml.jackson.databind.ObjectMapper();
 
                     @Override
                     public <T> T readValue(String value, Class<T> valueType) {
                         try {
-                            return mapper.readValue(value, valueType);
+                            return OBJECT_MAPPER.readValue(value, valueType);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -95,7 +107,7 @@ public class SWAPIClient {
                     @Override
                     public String writeValue(Object value) {
                         try {
-                            return mapper.writeValueAsString(value);
+                            return OBJECT_MAPPER.writeValueAsString(value);
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }

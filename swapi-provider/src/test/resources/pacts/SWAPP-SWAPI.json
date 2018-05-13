@@ -7,6 +7,33 @@
     },
     "interactions": [
         {
+            "description": "a request for characters'",
+            "request": {
+                "method": "GET",
+                "path": "/people"
+            },
+            "response": {
+                "status": 200,
+                "body": [
+                    {
+                        "gender": "male",
+                        "id": 1,
+                        "name": "Luke Skywalker"
+                    },
+                    {
+                        "gender": "n/a",
+                        "id": 2,
+                        "name": "C-3PO"
+                    }
+                ]
+            },
+            "providerStates": [
+                {
+                    "name": "star wars data exist"
+                }
+            ]
+        },
+        {
             "description": "a request for person with ID 1'",
             "request": {
                 "method": "GET",
@@ -22,7 +49,7 @@
             },
             "providerStates": [
                 {
-                    "name": "Luke Skywalker with ID 1 exists"
+                    "name": "star wars data exist"
                 }
             ]
         }

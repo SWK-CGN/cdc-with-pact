@@ -23,12 +23,8 @@ public class SwapiPactTest {
     @SuppressWarnings("unused")
     public final static Target target = new SpringBootHttpTarget();
 
-    @State("default")
+    @State("star wars data exist")
     public void createDefaultState() {
-    }
-
-    @State("Luke Skywalker with ID 1 exists")
-    public void createXzyState() {
     }
 
 }
