@@ -6,7 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.softwerkskammer.cdc.swapi.model.Film;
 import org.softwerkskammer.cdc.swapi.model.Person;
 import org.softwerkskammer.cdc.swapi.repositories.FilmRepository;
-import org.springframework.context.annotation.Profile;
+import org.softwerkskammer.cdc.swapi.repositories.PersonRepository;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,19 +24,21 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 @Component
-@Profile("data-import")
 public class SwapiImporter {
 
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper;
     private final FilmRepository filmRepository;
+    private final PersonRepository personRepository;
 
     public SwapiImporter(final ResourceLoader resourceLoader,
                          final ObjectMapper objectMapper,
-                         final FilmRepository filmRepository) {
+                         final FilmRepository filmRepository,
+                         final PersonRepository personRepository) {
         this.resourceLoader = resourceLoader;
         this.objectMapper = objectMapper;
         this.filmRepository = filmRepository;
+        this.personRepository = personRepository;
     }
 
     @PostConstruct
@@ -55,6 +57,12 @@ public class SwapiImporter {
 
         filmRepository.saveAll(films);
         filmRepository.flush();
+    }
+
+    @Transactional
+    public void deleteData() {
+        filmRepository.deleteAll();
+        personRepository.deleteAll();
     }
 
     private Person toPerson(final JsonNode swapiPerson) {

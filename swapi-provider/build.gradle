@@ -38,10 +38,10 @@ pact {
             protocol = 'http'
             host = 'localhost'
             port = 8080
-            startProviderTask = bootRun
+            stateChangeUrl = url('http://localhost:8080/pact-state-change')
 
             hasPactWith('SWAPP') {
-                pactSource = file('src/main/resources/pacts/SWAPP-SWAPI.json')
+                pactSource = file('src/test/resources/pacts/SWAPP-SWAPI.json')
             }
         }
     }

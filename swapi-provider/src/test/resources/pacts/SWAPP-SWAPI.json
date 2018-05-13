@@ -1,6 +1,6 @@
 {
     "provider": {
-        "name": "SWAPI-With-Data"
+        "name": "SWAPI"
     },
     "consumer": {
         "name": "SWAPP"
@@ -20,14 +20,14 @@
                 "body": {
                     "items": [
                         {
-                            "gender": "male",
                             "id": 1,
-                            "name": "Luke Skywalker"
+                            "name": "Luke Skywalker",
+                            "gender": "male"
                         },
                         {
-                            "gender": "male",
                             "id": 1,
-                            "name": "Luke Skywalker"
+                            "name": "Luke Skywalker",
+                            "gender": "male"
                         }
                     ]
                 },
@@ -72,7 +72,7 @@
             },
             "providerStates": [
                 {
-                    "name": "provider is initialized"
+                    "name": "provider has data"
                 }
             ]
         },
@@ -88,21 +88,12 @@
                     "Content-Type": "application/json"
                 },
                 "body": {
-                    "gender": "male",
                     "id": 1,
-                    "name": "Luke Skywalker"
+                    "name": "Luke Skywalker",
+                    "gender": "male"
                 },
                 "matchingRules": {
                     "body": {
-                        "$.gender": {
-                            "matchers": [
-                                {
-                                    "match": "regex",
-                                    "regex": "male|female|n/a"
-                                }
-                            ],
-                            "combine": "AND"
-                        },
                         "$.id": {
                             "matchers": [
                                 {
@@ -119,13 +110,37 @@
                                 }
                             ],
                             "combine": "AND"
+                        },
+                        "$.gender": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "male|female|n/a|hermaphrodite"
+                                }
+                            ],
+                            "combine": "AND"
                         }
                     }
                 }
             },
             "providerStates": [
                 {
-                    "name": "provider is initialized"
+                    "name": "provider has data"
+                }
+            ]
+        },
+        {
+            "description": "a request for person with ID 1'",
+            "request": {
+                "method": "GET",
+                "path": "/people/1"
+            },
+            "response": {
+                "status": 404
+            },
+            "providerStates": [
+                {
+                    "name": "provider has no data"
                 }
             ]
         }

@@ -27,8 +27,8 @@ class SWAPIClientTest extends Specification {
     def 'fetches a star wars person which does exist'() {
         given:
         providerMock {
-            hasPactWith 'SWAPI-With-Data'
-            given("provider is initialized")
+            hasPactWith 'SWAPI'
+            given("provider has data")
             uponReceiving("a request for person with ID 1'")
             withAttributes(path: '/people/1')
             willRespondWith(status: 200)
@@ -56,8 +56,8 @@ class SWAPIClientTest extends Specification {
     def 'fetches a star wars person which does not exist'() {
         given:
         providerMock {
-            hasPactWith 'SWAPI-Without-Data'
-            given("provider is initialized")
+            hasPactWith 'SWAPI'
+            given("provider has no data")
             uponReceiving("a request for person with ID 1'")
             withAttributes(path: '/people/1')
             willRespondWith(status: 404)
@@ -78,8 +78,8 @@ class SWAPIClientTest extends Specification {
     def 'fetches a list of people'() {
         given:
         providerMock {
-            hasPactWith 'SWAPI-With-Data'
-            given("provider is initialized")
+            hasPactWith 'SWAPI'
+            given("provider has data")
             uponReceiving("a request for people'")
             withAttributes(path: '/people')
             willRespondWith(status: 200)
