@@ -2,9 +2,11 @@ package org.softwerkskammer.cdc.swapp
 
 import au.com.dius.pact.consumer.PactVerificationResult
 import au.com.dius.pact.consumer.groovy.PactBuilder
+import org.softwerkskammer.cdc.swapp.model.SWPerson
 import spock.lang.Specification
 
-import static au.com.dius.pact.consumer.PactVerificationResult.Ok;
+import static au.com.dius.pact.consumer.PactVerificationResult.Ok
+import static groovy.json.JsonOutput.toJson;
 
 class SWAPIClientTest extends Specification {
 
@@ -24,22 +26,28 @@ class SWAPIClientTest extends Specification {
         }
     }
 
-    def 'fetches star wars films'() {
+    def 'fetches star wars person which does exist'() {
         given:
         providerMock {
-            given('several star wars films do exist')
-            uponReceiving('a request for films')
-            withAttributes(path: '/films')
-            willRespondWith(status: 200)
+            given("a person with id 'xyz' does exist")
+            uponReceiving("a request for person with id 'xyz'")
+            withAttributes(path: '/people/xyz')
+            willRespondWith(status: 200,
+                    body: toJson(new SWPerson("xyz", "Han Solo", "Male")))
         }
+        Optional<SWPerson> person = Optional.empty()
 
         when:
         PactVerificationResult pactResult = providerMock.runTest {
-            swapiClient.getFilms()
+            person = swapiClient.getPerson("xyz")
         }
 
         then:
         pactResult == Ok.INSTANCE
+        person.isPresent()
+        person.get().id == "xyz"
+        person.get().name == "Han Solo"
+        person.get().gender == "Male"
     }
 
 }
