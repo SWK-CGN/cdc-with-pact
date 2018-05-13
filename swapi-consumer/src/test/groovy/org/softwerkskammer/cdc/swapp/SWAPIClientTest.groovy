@@ -1,6 +1,7 @@
 package org.softwerkskammer.cdc.swapp
 
 import au.com.dius.pact.consumer.PactVerificationResult
+import au.com.dius.pact.consumer.groovy.PactBodyBuilder
 import au.com.dius.pact.consumer.groovy.PactBuilder
 import org.softwerkskammer.cdc.swapp.model.SWPerson
 import spock.lang.Specification
@@ -24,20 +25,19 @@ class SWAPIClientTest extends Specification {
         }
     }
 
-    def 'fetches a star wars character which does exist'() {
+    def 'fetches a star wars person which does exist'() {
         given:
         providerMock {
-            given("star wars data exist")
+            hasPactWith 'SWAPI-With-Data'
+            given("provider is initialized")
             uponReceiving("a request for person with ID 1'")
             withAttributes(path: '/people/1')
-            willRespondWith(status: 200, body:
-            /*new PactDslJsonBody()
-                    .stringType("id", "xyz")
-                    .stringType("name", "Han Solo")
-                    .stringMatcher("gender", "Male|Female", "Male").close() */
-                    "{\"id\": 1, \"name\": \"Luke Skywalker\", \"gender\": \"male\"}"
-                    //toJson(new SWPerson(1L, "Luke Skywalker", "male", emptyList()))
-            )
+            willRespondWith(status: 200)
+            withBody(mimeType: JSON.toString()){
+                id integer(1)
+                name regexp(~/.+/, 'Luke Skywalker')
+                gender regexp(~/male|female|n\/a/, 'male')
+            }
         }
         Optional<SWPerson> person = Optional.empty()
 
@@ -54,19 +54,43 @@ class SWAPIClientTest extends Specification {
         person.get().gender == "male"
     }
 
-
-    def 'fetches a list of star wars characters'() {
+    def 'fetches a star wars person which does not exist'() {
         given:
         providerMock {
-            given("star wars data exist")
-            uponReceiving("a request for characters'")
+            hasPactWith 'SWAPI-Without-Data'
+            given("provider is initialized")
+            uponReceiving("a request for person with ID 1'")
+            withAttributes(path: '/people/1')
+            willRespondWith(status: 404)
+        }
+        Optional<SWPerson> person = Optional.empty()
+
+        when:
+        PactVerificationResult pactResult = providerMock.runTest {
+            person = swapiClient.getPerson(1L)
+        }
+
+        then:
+        pactResult == Ok.INSTANCE
+        ! person.isPresent()
+    }
+
+
+    def 'fetches a list of people'() {
+        given:
+        providerMock {
+            hasPactWith 'SWAPI-With-Data'
+            given("provider is initialized")
+            uponReceiving("a request for people'")
             withAttributes(path: '/people')
-            willRespondWith(status: 200, body:
-                    "[" +
-                            "{\"id\": 1, \"name\": \"Luke Skywalker\", \"gender\": \"male\"}," +
-                            "{\"id\": 2, \"name\": \"C-3PO\", \"gender\": \"n/a\"}" +
-                            "]"
-            )
+            willRespondWith(status: 200)
+            withBody(mimeType: JSON.toString()) {
+                items eachLike(2 , {
+                    id integer(1)
+                    name regexp(~/.+/, 'Luke Skywalker')
+                    gender regexp(~/male|female|n\/a|hermaphrodite/, 'male')
+                })
+            }
         }
         List<SWPerson> people = emptyList()
 

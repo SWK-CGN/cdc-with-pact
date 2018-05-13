@@ -15,16 +15,16 @@ import org.springframework.test.annotation.DirtiesContext;
 @RunWith(SpringRestPactRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@Provider("SWAPI")
+@Provider("SWAPI-Without-Data")
 @PactFolder("pacts")
-public class SwapiPactTest {
+public class SwapiPactTestWithoutData {
 
     @TestTarget
     @SuppressWarnings("unused")
     public final static Target target = new SpringBootHttpTarget();
 
-    @State("star wars data exist")
-    public void createDefaultState() {
+    @State("provider is initialized")
+    public void initialize() {
     }
 
 }

@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.softwerkskammer.cdc.swapi.model.Film;
 import org.softwerkskammer.cdc.swapi.model.Person;
 import org.softwerkskammer.cdc.swapi.repositories.FilmRepository;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 @Component
+@Profile("data-import")
 public class SwapiImporter {
 
     private final ResourceLoader resourceLoader;

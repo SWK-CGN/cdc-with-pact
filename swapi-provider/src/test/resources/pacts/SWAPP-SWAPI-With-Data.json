@@ -1,0 +1,141 @@
+{
+    "provider": {
+        "name": "SWAPI-With-Data"
+    },
+    "consumer": {
+        "name": "SWAPP"
+    },
+    "interactions": [
+        {
+            "description": "a request for people'",
+            "request": {
+                "method": "GET",
+                "path": "/people"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "items": [
+                        {
+                            "gender": "male",
+                            "id": 1,
+                            "name": "Luke Skywalker"
+                        },
+                        {
+                            "gender": "male",
+                            "id": 1,
+                            "name": "Luke Skywalker"
+                        }
+                    ]
+                },
+                "matchingRules": {
+                    "body": {
+                        "$.items": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.items[*].id": {
+                            "matchers": [
+                                {
+                                    "match": "integer"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.items[*].name": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": ".+"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.items[*].gender": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "male|female|n/a|hermaphrodite"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "provider is initialized"
+                }
+            ]
+        },
+        {
+            "description": "a request for person with ID 1'",
+            "request": {
+                "method": "GET",
+                "path": "/people/1"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "gender": "male",
+                    "id": 1,
+                    "name": "Luke Skywalker"
+                },
+                "matchingRules": {
+                    "body": {
+                        "$.gender": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "male|female|n/a"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.id": {
+                            "matchers": [
+                                {
+                                    "match": "integer"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.name": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": ".+"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "provider is initialized"
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "pact-specification": {
+            "version": "3.0.0"
+        },
+        "pact-jvm": {
+            "version": "3.5.16"
+        }
+    }
+}
