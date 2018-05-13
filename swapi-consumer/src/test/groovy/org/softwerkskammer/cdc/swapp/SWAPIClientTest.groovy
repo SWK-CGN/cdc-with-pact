@@ -1,7 +1,6 @@
 package org.softwerkskammer.cdc.swapp
 
 import au.com.dius.pact.consumer.PactVerificationResult
-import au.com.dius.pact.consumer.groovy.PactBodyBuilder
 import au.com.dius.pact.consumer.groovy.PactBuilder
 import org.softwerkskammer.cdc.swapp.model.SWPerson
 import spock.lang.Specification
@@ -36,7 +35,7 @@ class SWAPIClientTest extends Specification {
             withBody(mimeType: JSON.toString()){
                 id integer(1)
                 name regexp(~/.+/, 'Luke Skywalker')
-                gender regexp(~/male|female|n\/a/, 'male')
+                gender regexp(~/male|female|n\/a|hermaphrodite/, 'male')
             }
         }
         Optional<SWPerson> person = Optional.empty()
