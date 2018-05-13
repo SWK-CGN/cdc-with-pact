@@ -1,5 +1,6 @@
 package org.softwerkskammer.cdc.swapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -7,25 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class SWPerson {
+public class Person {
 
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     private long characterId;
     private String name;
     private String gender;
-    @JsonIgnore
     @ManyToMany(mappedBy = "characters")
-    private List<SWFilm> films = new ArrayList<>();
+    @JsonBackReference
+    private List<Film> films = new ArrayList<>();
 
-    public SWPerson() {
+    public Person() {
         // used by JPA
     }
 
-    public SWPerson(final long characterId, final String name, final String gender) {
+    public Person(final long characterId, final String name, final String gender) {
         this.characterId = characterId;
         this.name = name;
         this.gender = gender;
@@ -47,7 +48,7 @@ public class SWPerson {
         return gender;
     }
 
-    public List<SWFilm> getFilms() {
+    public List<Film> getFilms() {
         return films;
     }
 
