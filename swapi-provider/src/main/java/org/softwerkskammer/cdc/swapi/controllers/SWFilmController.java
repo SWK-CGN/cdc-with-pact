@@ -8,10 +8,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
-@RequestMapping("/films")
+@RequestMapping(SWFilmController.PATH)
 public class SWFilmController {
+
+    static final String PATH = "/films";
+
+    static String path(final UriComponentsBuilder uriComponentsBuilder) {
+        return uriComponentsBuilder.toUriString() + PATH;
+    }
 
     private final FilmRepository filmRepository;
 
@@ -20,16 +29,23 @@ public class SWFilmController {
     }
 
     @GetMapping
-    public List<Film> films(final UriComponentsBuilder uriComponentsBuilder) {
-        System.out.println(uriComponentsBuilder);
-        return filmRepository.findAll(Sort.by("episodeId"));
+    public List<SWFilm> films(final UriComponentsBuilder uriComponentsBuilder) {
+        return filmRepository.findAll(Sort.by("episodeId")).stream()
+                .map(film -> new SWFilm(film, SWPersonController.path(uriComponentsBuilder)))
+                .collect(toList());
     }
 
     @GetMapping("/{episodeId}")
-    public ResponseEntity<Film> film(final @PathVariable("episodeId") long episodeId) {
+    public ResponseEntity<SWFilm> film(final @PathVariable("episodeId") long episodeId,
+                                     final UriComponentsBuilder uriComponentsBuilder) {
         return filmRepository.findByEpisodeId(episodeId)
+                .map(toSWFilm(uriComponentsBuilder))
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    private Function<Film, SWFilm> toSWFilm(final UriComponentsBuilder uriComponentsBuilder) {
+        return film -> new SWFilm(film, SWPersonController.path(uriComponentsBuilder));
     }
 
 }
