@@ -1,29 +1,39 @@
 package org.softwerkskammer.cdc.swapi.controllers;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.softwerkskammer.cdc.swapi.model.Film;
 import org.softwerkskammer.cdc.swapi.model.Person;
 
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.softwerkskammer.cdc.swapi.controllers.ControllerUtils.toUrl;
 
 public class SWPerson {
 
+    @JsonProperty("id")
+    private final long id;
     @JsonProperty("name")
     private final String name;
     @JsonProperty("gender")
     private final String gender;
     @JsonProperty("films")
     private final List<String> films;
+    @JsonProperty("url")
+    private final String url;
 
-    public SWPerson(final Person person, final String filmBaseUrl) {
+    SWPerson(final Person person, final String peoplePath, final String filmsPath) {
+        this.id = person.getCharacterId();
         this.name = person.getName();
         this.gender = person.getGender();
         this.films = person.getFilms().stream()
-                .map(film -> toUrl(filmBaseUrl, film))
+                .map(film -> toUrl(filmsPath, film.getEpisodeId()))
                 .collect(toList());
+        this.url = toUrl(peoplePath, person.getCharacterId());
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {
@@ -38,8 +48,8 @@ public class SWPerson {
         return Collections.unmodifiableList(films);
     }
 
-    private String toUrl(final String filmBaseUrl, final Film film) {
-        return String.format("%s/%d", filmBaseUrl, film.getEpisodeId());
+    public String getUrl() {
+        return url;
     }
 
 }

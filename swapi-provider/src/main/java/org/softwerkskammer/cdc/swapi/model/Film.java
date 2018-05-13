@@ -1,9 +1,5 @@
 package org.softwerkskammer.cdc.swapi.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,15 +10,12 @@ public class Film {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
-    @JsonProperty("id")
     private long episodeId;
     private String title;
     private LocalDate releaseDate;
     @ManyToMany(cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Person> characters = new ArrayList<>();
 
     public Film() {

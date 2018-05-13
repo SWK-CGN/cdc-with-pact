@@ -31,7 +31,7 @@ public class SWFilmController {
     @GetMapping
     public List<SWFilm> films(final UriComponentsBuilder uriComponentsBuilder) {
         return filmRepository.findAll(Sort.by("episodeId")).stream()
-                .map(film -> new SWFilm(film, SWPersonController.path(uriComponentsBuilder)))
+                .map(toSWFilm(uriComponentsBuilder))
                 .collect(toList());
     }
 
@@ -45,7 +45,9 @@ public class SWFilmController {
     }
 
     private Function<Film, SWFilm> toSWFilm(final UriComponentsBuilder uriComponentsBuilder) {
-        return film -> new SWFilm(film, SWPersonController.path(uriComponentsBuilder));
+        return film -> new SWFilm(film,
+                SWFilmController.path(uriComponentsBuilder),
+                SWPersonController.path(uriComponentsBuilder));
     }
 
 }

@@ -3,37 +3,40 @@ package org.softwerkskammer.cdc.swapi.controllers;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.softwerkskammer.cdc.swapi.model.Film;
-import org.softwerkskammer.cdc.swapi.model.Person;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.softwerkskammer.cdc.swapi.controllers.ControllerUtils.toUrl;
 
 public class SWFilm {
 
-    @JsonProperty("episode_id")
-    private final long episodeId;
+    @JsonProperty("id")
+    private final long id;
     @JsonProperty("title")
     private final String title;
-    @JsonProperty("release_date")
+    @JsonProperty("releaseDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate releaseDate;
     @JsonProperty("characters")
     private final List<String> characters;
+    @JsonProperty("url")
+    private final String url;
 
-    public SWFilm(final Film film, final String peoplePath) {
-        this.episodeId = film.getEpisodeId();
+    SWFilm(final Film film, final String filmsPath, final String peoplePath) {
+        this.id = film.getEpisodeId();
         this.title = film.getTitle();
         this.releaseDate = film.getReleaseDate();
         this.characters = film.getCharacters().stream()
-                .map(character -> toUrl(peoplePath, character))
+                .map(character -> toUrl(peoplePath, character.getCharacterId()))
                 .collect(toList());
+        this.url = toUrl(filmsPath, film.getEpisodeId());
     }
 
-    public long getEpisodeId() {
-        return episodeId;
+    public long getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -48,8 +51,7 @@ public class SWFilm {
         return Collections.unmodifiableList(characters);
     }
 
-    private String toUrl(final String baseUrl, final Person character) {
-        return String.format("%s/%d", baseUrl, character.getCharacterId());
+    public String getUrl() {
+        return url;
     }
-
 }
