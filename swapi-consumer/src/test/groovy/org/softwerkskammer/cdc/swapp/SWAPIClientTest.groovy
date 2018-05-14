@@ -7,6 +7,7 @@ import org.softwerkskammer.cdc.swapp.model.SWPerson
 import spock.lang.Specification
 
 import static au.com.dius.pact.consumer.PactVerificationResult.Ok
+import static java.util.Collections.emptyList
 
 class SWAPIClientTest extends Specification {
 
@@ -33,7 +34,12 @@ class SWAPIClientTest extends Specification {
             given("provider has data")
             uponReceiving("a request for person with ID 1'")
             withAttributes(path: '/people/1')
-            willRespondWith(status: 200, body: body.toString())
+            willRespondWith(status: 200)
+            withBody(mimeType: JSON.toString()){
+                id integer(1)
+                name regexp(~/.+/, 'Luke Skywalker')
+                gender regexp(~/male|female|n\/a|hermaphrodite/, 'male')
+            }
         }
         Optional<SWPerson> person = Optional.empty()
 
@@ -49,5 +55,54 @@ class SWAPIClientTest extends Specification {
         person.get().name == "Luke Skywalker"
         person.get().gender == "male"
     }
+
+    def 'fetches a star wars person which does not exist'() {
+        given:
+        providerMock {
+            hasPactWith 'SWAPI'
+            given("provider has no data")
+            uponReceiving("a request for person with ID 1'")
+            withAttributes(path: '/people/1')
+            willRespondWith(status: 404)
+        }
+        Optional<SWPerson> person = Optional.empty()
+
+        when:
+        PactVerificationResult pactResult = providerMock.runTest {
+            person = swapiClient.getPerson(1L)
+        }
+
+        then:
+        pactResult == Ok.INSTANCE
+        ! person.isPresent()
+    }
+
+    def 'fetches a list of people'() {
+        given:
+        providerMock {
+            given("provider has data")
+            uponReceiving("a request for people'")
+            withAttributes(path: '/people')
+            willRespondWith(status: 200)
+            withBody(mimeType: JSON.toString()) {
+                items minLike(1,3 , {
+                    id integer(1)
+                    name regexp(~/.+/, 'Luke Skywalker')
+                    gender regexp(~/male|female|n\/a|hermaphrodite/, 'male')
+                })
+            }
+        }
+        List<SWPerson> people = emptyList()
+
+        when:
+        PactVerificationResult pactResult = providerMock.runTest {
+            people = swapiClient.getPeople()
+        }
+
+        then:
+        pactResult == Ok.INSTANCE
+        people.size() == 3
+    }
+
 
 }
