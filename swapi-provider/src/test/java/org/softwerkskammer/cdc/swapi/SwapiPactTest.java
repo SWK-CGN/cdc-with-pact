@@ -15,7 +15,6 @@ import org.softwerkskammer.cdc.swapi.controllers.PactController;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -23,7 +22,6 @@ import java.util.Map;
 
 @RunWith(SpringRestPactRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @PactFolder("pacts")
 @Provider("SWAPI")
 public class SwapiPactTest {
